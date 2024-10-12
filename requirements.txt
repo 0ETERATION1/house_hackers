@@ -1,4 +1,2 @@
 fastapi==0.115.0
-uvicorn==0.30.6
-uvloop==0.17.0
-httptools==0.6.0
+uvicorn[standard]==0.30.6
