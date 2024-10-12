@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import styles from "./page.module.css";
+import TopZipCodes from "./components/TopZipCodes";
 
 const MapComponent = dynamic(() => import("./components/MapComponent"), {
   ssr: false,
@@ -80,6 +81,12 @@ export default function Home() {
           />
           <p>Average Home Price: ${avgHomePrice.toLocaleString()}</p>
         </div>
+
+        <TopZipCodes
+          schoolRating={schoolRating}
+          numHospitals={numHospitals}
+          avgHomePrice={avgHomePrice}
+        />
       </div>
     </main>
   );
