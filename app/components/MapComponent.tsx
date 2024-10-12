@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
+import virginiaOutline from '../data/virginia_outline.geojson';
 
 const MapboxExample = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -16,7 +17,7 @@ const MapboxExample = () => {
     const map = new mapboxgl.Map({
       container: mapContainerRef.current!,
       // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-      style: 'mapbox://styles/mapbox/streets-v12',
+      style: 'mapbox://styles/aterskin/cm25ko62f007d01nqf56lhsoy',
       center: [-100.486052, 37.830348],
       zoom: 2
     });
@@ -26,17 +27,17 @@ const MapboxExample = () => {
     let hoveredPolygonId: number | string | null = null;
 
     map.on('load', () => {
-      map.addSource('states', {
+      map.addSource('virginia', {
         type: 'geojson',
-        data: 'https://docs.mapbox.com/mapbox-gl-js/assets/us_states.geojson'
+        data: virginiaOutline
       });
 
       // The feature-state dependent fill-opacity expression will render the hover effect
       // when a feature's hover state is set to true.
       map.addLayer({
-        id: 'state-fills',
+        id: 'virginia-fill',
         type: 'fill',
-        source: 'states',
+        source: 'virginia',
         layout: {},
         paint: {
           'fill-color': '#627BC1',
@@ -50,9 +51,9 @@ const MapboxExample = () => {
       });
 
       map.addLayer({
-        id: 'state-borders',
+        id: 'virginia-border',
         type: 'line',
-        source: 'states',
+        source: 'virginia',
         layout: {},
         paint: {
           'line-color': '#627BC1',
@@ -60,28 +61,28 @@ const MapboxExample = () => {
         }
       });
 
-      map.on('mousemove', 'state-fills', (e) => {
+      map.on('mousemove', 'virginia-fill', (e) => {
         if (e.features?.[0]) {
           if (hoveredPolygonId !== null) {
             map.setFeatureState(
-              { source: 'states', id: hoveredPolygonId },
+              { source: 'virginia', id: hoveredPolygonId },
               { hover: false }
             );
           }
           hoveredPolygonId = e.features[0].id ?? null;
           if (hoveredPolygonId !== null) {
             map.setFeatureState(
-              { source: 'states', id: hoveredPolygonId },
+              { source: 'virginia', id: hoveredPolygonId },
               { hover: true }
             );
           }
         }
       });
 
-      map.on('mouseleave', 'state-fills', () => {
+      map.on('mouseleave', 'virginia-fill', () => {
         if (hoveredPolygonId !== null) {
           map.setFeatureState(
-            { source: 'states', id: hoveredPolygonId },
+            { source: 'virginia', id: hoveredPolygonId },
             { hover: false }
           );
         }
