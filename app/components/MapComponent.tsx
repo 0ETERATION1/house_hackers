@@ -43,8 +43,8 @@ const MapComponent: React.FC = () => {
           "fill-color": [
             "case",
             ["boolean", ["feature-state", "hover"], false],
-            "#627BC1",
-            "#627BC1",
+            "#3A539B", // Darker blue for hovered state
+            "#627BC1", // Original blue for non-hovered state
           ],
           "fill-opacity": [
             "case",
