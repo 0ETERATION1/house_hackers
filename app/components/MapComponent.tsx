@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -18,170 +18,133 @@ interface MapComponentProps {
   avgHomePrice: number;
 }
 
-const MapComponent: React.FC<MapComponentProps> = React.memo(
-  ({ schoolRating, numHospitals, avgHomePrice }) => {
-    const mapContainerRef = useRef<HTMLDivElement>(null);
-    const mapRef = useRef<mapboxgl.Map | null>(null);
-    const [mapLoaded, setMapLoaded] = useState(false);
+const MapComponent: React.FC<MapComponentProps> = ({
+  schoolRating,
+  numHospitals,
+  avgHomePrice,
+}) => {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<mapboxgl.Map | null>(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
-    // Function to interpolate between colors
-    const getColor = useCallback((value: number) => {
-      const red = [255, 0, 0];
-      const yellow = [255, 255, 0];
-      const green = [0, 255, 0];
+  // Function to interpolate between colors
+  const getColor = (value: number) => {
+    const red = [255, 0, 0];
+    const yellow = [255, 255, 0];
+    const green = [0, 255, 0];
 
-      let color;
-      if (value <= 50) {
-        const ratio = value / 50;
-        color = red.map((comp, i) =>
-          Math.round(comp + ratio * (yellow[i] - comp))
-        );
-      } else {
-        const ratio = (value - 50) / 50;
-        color = yellow.map((comp, i) =>
-          Math.round(comp + ratio * (green[i] - comp))
-        );
-      }
+    let colorComponents;
+    if (value <= 50) {
+      const ratio = value / 50;
+      colorComponents = red.map((comp, i) =>
+        Math.round(comp + ratio * (yellow[i] - comp))
+      );
+    } else {
+      const ratio = (value - 50) / 50;
+      colorComponents = yellow.map((comp, i) =>
+        Math.round(comp + ratio * (green[i] - comp))
+      );
+    }
 
-      return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-    }, []);
+    return `rgb(${colorComponents[0]}, ${colorComponents[1]}, ${colorComponents[2]})`;
+  };
 
-    const updateMapStyle = useCallback(() => {
-      const map = mapRef.current;
-      if (map && mapLoaded && map.getLayer("zip-codes-fill")) {
-        // Normalize the values to a 0-100 scale
-        const normalizedSchoolRating = ((schoolRating - 1) / 9) * 100;
-        const normalizedNumHospitals = (numHospitals / 5) * 100;
-        const normalizedAvgHomePrice = ((avgHomePrice - 200000) / 800000) * 100;
+  // Function to update map style
+  const updateMapStyle = () => {
+    const map = mapRef.current;
+    if (map && mapLoaded && map.getLayer("zip-codes-fill")) {
+      // Normalize the values to a 0-100 scale
+      const normalizedSchoolRating = ((schoolRating - 1) / 9) * 100;
+      const normalizedNumHospitals = (numHospitals / 5) * 100;
+      const normalizedAvgHomePrice = ((avgHomePrice - 200000) / 800000) * 100;
 
-        // Calculate an overall score (you can adjust the weights as needed)
-        const overallScore =
-          (normalizedSchoolRating +
-            normalizedNumHospitals +
-            normalizedAvgHomePrice) /
-          3;
+      // Calculate an overall score (you can adjust the weights as needed)
+      const overallScore =
+        (normalizedSchoolRating +
+          normalizedNumHospitals +
+          normalizedAvgHomePrice) /
+        3;
 
-        const color = getColor(overallScore);
+      const color = getColor(overallScore);
 
-        map.setPaintProperty("zip-codes-fill", "fill-color", color);
-      }
-    }, [mapLoaded, schoolRating, numHospitals, avgHomePrice, getColor]);
+      // Update only the fill-color property
+      map.setPaintProperty("zip-codes-fill", "fill-color", color);
+    }
+  };
 
-    // Initialize map when component mounts
-    useEffect(() => {
-      if (!mapContainerRef.current) return;
+  // Initialize map when component mounts
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
 
-      const map = new mapboxgl.Map({
-        container: mapContainerRef.current,
-        style: "mapbox://styles/mapbox/light-v11",
-        center: [-77.2, 38.9],
-        zoom: 10,
+    const map = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/light-v11",
+      center: [-77.2, 38.9],
+      zoom: 10,
+    });
+
+    mapRef.current = map;
+
+    map.on("load", () => {
+      map.addSource("fairfax-zip-codes", {
+        type: "geojson",
+        data: fairfaxZipCodes,
       });
 
-      mapRef.current = map;
-
-      map.on("load", () => {
-        map.addSource("fairfax-zip-codes", {
-          type: "geojson",
-          data: fairfaxZipCodes,
-        });
-
-        map.addLayer({
-          id: "zip-codes-fill",
-          type: "fill",
-          source: "fairfax-zip-codes",
-          paint: {
-            "fill-color": "#627BC1", // Initial color
-            "fill-opacity": [
-              "case",
-              ["boolean", ["feature-state", "hover"], false],
-              0.8,
-              0.5,
-            ],
-            "fill-color-transition": { duration: 300 },
-            "fill-opacity-transition": { duration: 300 },
-          },
-        });
-
-        map.addLayer({
-          id: "zip-codes-outline",
-          type: "line",
-          source: "fairfax-zip-codes",
-          paint: {
-            "line-color": "#627BC1",
-            "line-width": 2,
-          },
-        });
-
-        map.addLayer({
-          id: "zip-codes-labels",
-          type: "symbol",
-          source: "fairfax-zip-codes",
-          layout: {
-            "text-field": ["get", "ZIPCODE"],
-            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-            "text-size": 12,
-            "text-allow-overlap": false,
-            "text-ignore-placement": false,
-          },
-          paint: {
-            "text-color": "#000000",
-            "text-halo-color": "#FFFFFF",
-            "text-halo-width": 1,
-          },
-        });
-
-        // Add hover effect
-        // map.on("mousemove", "zip-codes-fill", (e) => {
-        //   if (e.features && e.features.length > 0) {
-        //     const feature = e.features[0];
-        //     if (feature.properties && feature.properties.ZIPCODE) {
-        //       const zipCode = feature.properties.ZIPCODE.toString();
-        //       if (hoveredZipCodeRef.current !== zipCode) {
-        //         if (hoveredZipCodeRef.current) {
-        //           map.setFeatureState(
-        //             {
-        //               source: "fairfax-zip-codes",
-        //               id: hoveredZipCodeRef.current,
-        //             },
-        //             { hover: false }
-        //           );
-        //         }
-        //         map.setFeatureState(
-        //           { source: "fairfax-zip-codes", id: zipCode },
-        //           { hover: true }
-        //         );
-        //         hoveredZipCodeRef.current = zipCode;
-        //       }
-        //     }
-        //   }
-        // });
-
-        // map.on("mouseleave", "zip-codes-fill", () => {
-        //   if (hoveredZipCodeRef.current) {
-        //     map.setFeatureState(
-        //       { source: "fairfax-zip-codes", id: hoveredZipCodeRef.current },
-        //       { hover: false }
-        //     );
-        //     hoveredZipCodeRef.current = null;
-        //   }
-        // });
-
-        setMapLoaded(true);
-        updateMapStyle();
+      map.addLayer({
+        id: "zip-codes-fill",
+        type: "fill",
+        source: "fairfax-zip-codes",
+        paint: {
+          "fill-color": "#627BC1", // Initial color
+          "fill-opacity": 0.5,
+          "fill-color-transition": { duration: 300 },
+        },
       });
 
-      return () => map.remove();
-    }, [updateMapStyle]);
+      map.addLayer({
+        id: "zip-codes-outline",
+        type: "line",
+        source: "fairfax-zip-codes",
+        paint: {
+          "line-color": "#627BC1",
+          "line-width": 2,
+        },
+      });
 
-    // Update map style when props change
-    useEffect(() => {
-      updateMapStyle();
-    }, [schoolRating, numHospitals, avgHomePrice, updateMapStyle]);
+      map.addLayer({
+        id: "zip-codes-labels",
+        type: "symbol",
+        source: "fairfax-zip-codes",
+        layout: {
+          "text-field": ["get", "ZIPCODE"],
+          "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+          "text-size": 12,
+        },
+        paint: {
+          "text-color": "#000000",
+          "text-halo-color": "#FFFFFF",
+          "text-halo-width": 1,
+        },
+      });
 
-    return <div ref={mapContainerRef} className={styles.mapContainer} />;
-  }
-);
+      setMapLoaded(true);
+      updateMapStyle(); // Apply initial style based on the current slider values
+    });
+
+    return () => {
+      map.remove();
+    };
+  }, []); // Empty dependency array ensures this runs once on mount
+
+  // Update map style when props change
+  useEffect(() => {
+    updateMapStyle();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [schoolRating, numHospitals, avgHomePrice]);
+
+  return <div ref={mapContainerRef} className={styles.mapContainer} />;
+};
 
 MapComponent.displayName = "MapComponent";
 
