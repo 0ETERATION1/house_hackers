@@ -67,6 +67,25 @@ const MapComponent: React.FC = () => {
         },
       });
 
+      // Add a new layer for zip code labels
+      map.addLayer({
+        id: "zip-codes-labels",
+        type: "symbol",
+        source: "fairfax-zip-codes",
+        layout: {
+          "text-field": ["get", "ZIPCODE"],
+          "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+          "text-size": 12,
+          "text-allow-overlap": false,
+          "text-ignore-placement": false,
+        },
+        paint: {
+          "text-color": "#000000",
+          "text-halo-color": "#FFFFFF",
+          "text-halo-width": 1,
+        },
+      });
+
       // Add hover effect
       map.on("mousemove", "zip-codes-fill", (e) => {
         if (e.features && e.features.length > 0) {
