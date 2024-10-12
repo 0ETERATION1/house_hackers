@@ -12,7 +12,17 @@ import fairfaxZipCodes from "../data/fairfax_zip_codes.geojson";
 // Set the access token
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 
-const MapComponent: React.FC = () => {
+interface MapComponentProps {
+  schoolRating: number;
+  numHospitals: number;
+  avgHomePrice: number;
+}
+
+const MapComponent: React.FC<MapComponentProps> = ({
+  schoolRating,
+  numHospitals,
+  avgHomePrice,
+}) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const [hoveredZipCode, setHoveredZipCode] = useState<string | null>(null);
@@ -121,7 +131,7 @@ const MapComponent: React.FC = () => {
     });
 
     return () => map.remove();
-  }, []);
+  }, [schoolRating, numHospitals, avgHomePrice]);
 
   return <div ref={mapContainerRef} className={styles.mapContainer} />;
 };
