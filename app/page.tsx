@@ -18,7 +18,7 @@ export default function Home() {
   if (!isClient) return null;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
+    <main style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
       <MapComponent />
     </main>
   );

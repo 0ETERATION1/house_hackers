@@ -1,117 +1,96 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
+import React, { useEffect, useRef } from 'react';
+import mapboxgl from 'mapbox-gl';
 
-if (!process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN) {
-  console.error("Mapbox access token is missing");
-}
+import 'mapbox-gl/dist/mapbox-gl.css';
 
-mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
-
-console.log("Environment token:", process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN);
-
-export default function MapComponent() {
-  const mapContainer = useRef<HTMLDivElement | null>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+const MapboxExample = () => {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<mapboxgl.Map | null>(null);
 
   useEffect(() => {
-    if (!mapboxgl.supported()) {
-      setError("Your browser does not support Mapbox GL");
-      return;
-    }
+    // Use the environment variable for the Mapbox access token
+    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || '';
 
-    if (map.current) return;
-    if (!mapContainer.current) return;
+    const map = new mapboxgl.Map({
+      container: mapContainerRef.current!,
+      // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [-100.486052, 37.830348],
+      zoom: 2
+    });
 
-    console.log("Initializing map...");
-    console.log("Mapbox Token:", process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN);
+    mapRef.current = map;
 
-    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
+    let hoveredPolygonId: number | string | null = null;
 
-    let mapInstance: mapboxgl.Map | null = null;
-
-    try {
-      mapInstance = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: "mapbox://styles/mapbox/streets-v12",
-        center: [-74.5, 40],
-        zoom: 9,
-        transformRequest: (url, resourceType) => {
-          console.log(`Resource request: ${url}, Type: ${resourceType}`);
-          return { url };
-        },
+    map.on('load', () => {
+      map.addSource('states', {
+        type: 'geojson',
+        data: 'https://docs.mapbox.com/mapbox-gl-js/assets/us_states.geojson'
       });
 
-      mapInstance.on("load", () => {
-        console.log("Map loaded successfully");
-        setMapLoaded(true);
-        map.current = mapInstance;
+      // The feature-state dependent fill-opacity expression will render the hover effect
+      // when a feature's hover state is set to true.
+      map.addLayer({
+        id: 'state-fills',
+        type: 'fill',
+        source: 'states',
+        layout: {},
+        paint: {
+          'fill-color': '#627BC1',
+          'fill-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            1,
+            0.5
+          ]
+        }
       });
 
-      mapInstance.on("error", (e) => {
-        console.error("Mapbox error:", e);
-        setError(`Mapbox error: ${e.error}`);
+      map.addLayer({
+        id: 'state-borders',
+        type: 'line',
+        source: 'states',
+        layout: {},
+        paint: {
+          'line-color': '#627BC1',
+          'line-width': 2
+        }
       });
 
-      mapInstance.on("styledata", () => {
-        console.log("Style data loaded");
+      map.on('mousemove', 'state-fills', (e) => {
+        if (e.features?.[0]) {
+          if (hoveredPolygonId !== null) {
+            map.setFeatureState(
+              { source: 'states', id: hoveredPolygonId },
+              { hover: false }
+            );
+          }
+          hoveredPolygonId = e.features[0].id ?? null;
+          if (hoveredPolygonId !== null) {
+            map.setFeatureState(
+              { source: 'states', id: hoveredPolygonId },
+              { hover: true }
+            );
+          }
+        }
       });
 
-      mapInstance.on("sourcedata", () => {
-        console.log("Source data loaded");
+      map.on('mouseleave', 'state-fills', () => {
+        if (hoveredPolygonId !== null) {
+          map.setFeatureState(
+            { source: 'states', id: hoveredPolygonId },
+            { hover: false }
+          );
+        }
+        hoveredPolygonId = null;
       });
-    } catch (err) {
-      console.error("Error initializing map:", err);
-      setError(
-        `Failed to initialize map: ${
-          err instanceof Error ? err.message : String(err)
-        }`
-      );
-    }
+    });
+  }, []);
 
-    const initTimeout = setTimeout(() => {
-      if (!mapLoaded) {
-        console.log("Map initialization timed out");
-        setError("Map initialization timed out");
-      }
-    }, 10000); // 10 seconds timeout
+  return <div id="map" ref={mapContainerRef} style={{ height: '100%' }} />;
+};
 
-    return () => {
-      clearTimeout(initTimeout);
-      if (mapInstance && mapInstance.loaded()) {
-        console.log("Removing map...");
-        mapInstance.remove();
-      } else {
-        console.log("Map not fully loaded, skipping removal");
-      }
-    };
-  }, [mapLoaded]);
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  return (
-    <div style={{ width: "100%", height: "500px", position: "relative" }}>
-      <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />
-      {!mapLoaded && (
-        <div
-          style={{
-            position: "absolute",
-            top: "10px",
-            left: "10px",
-            background: "white",
-            padding: "5px",
-            zIndex: 10,
-          }}
-        >
-          Loading map...
-        </div>
-      )}
-    </div>
-  );
-}
+export default MapboxExample;
