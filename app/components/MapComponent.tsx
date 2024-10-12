@@ -18,35 +18,17 @@ interface MapComponentProps {
   avgHomePrice: number;
 }
 
-const getColorExpression = (
-  schoolRating: number,
-  numHospitals: number,
-  avgHomePrice: number
-) => {
-  // This is a placeholder. Implement your own logic to determine colors based on the criteria
-  return [
-    "interpolate",
-    ["linear"],
-    ["get", "ZIPCODE"],
-    20000,
-    "#ff0000",
-    30000,
-    "#00ff00",
-    40000,
-    "#0000ff",
-  ];
-};
-
 const MapComponent: React.FC<MapComponentProps> = React.memo(
   ({ schoolRating, numHospitals, avgHomePrice }) => {
     const mapContainerRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<mapboxgl.Map | null>(null);
-    const [hoveredZipCode, setHoveredZipCode] = useState<string | null>(null);
+    const hoveredZipCodeRef = useRef<string | null>(null);
     const [mapLoaded, setMapLoaded] = useState(false);
 
     const updateMapStyle = useCallback(() => {
-      if (mapRef.current && mapLoaded) {
-        mapRef.current.setPaintProperty("zip-codes-fill", "fill-color", [
+      const map = mapRef.current;
+      if (map && mapLoaded && map.getLayer("zip-codes-fill")) {
+        map.setPaintProperty("zip-codes-fill", "fill-color", [
           "interpolate",
           ["linear"],
           ["get", "value"],
@@ -74,8 +56,6 @@ const MapComponent: React.FC<MapComponentProps> = React.memo(
       mapRef.current = map;
 
       map.on("load", () => {
-        setMapLoaded(true);
-
         map.addSource("fairfax-zip-codes", {
           type: "geojson",
           data: fairfaxZipCodes,
@@ -113,7 +93,6 @@ const MapComponent: React.FC<MapComponentProps> = React.memo(
           },
         });
 
-        // Add a new layer for zip code labels
         map.addLayer({
           id: "zip-codes-labels",
           type: "symbol",
@@ -133,49 +112,59 @@ const MapComponent: React.FC<MapComponentProps> = React.memo(
         });
 
         // Add hover effect
-        map.on("mousemove", "zip-codes-fill", (e) => {
-          if (e.features && e.features.length > 0) {
-            const feature = e.features[0];
-            if (feature.properties && feature.properties.ZIPCODE) {
-              const zipCode = feature.properties.ZIPCODE.toString();
-              if (hoveredZipCode !== zipCode) {
-                if (hoveredZipCode) {
-                  map.setFeatureState(
-                    { source: "fairfax-zip-codes", id: hoveredZipCode },
-                    { hover: false }
-                  );
-                }
-                map.setFeatureState(
-                  { source: "fairfax-zip-codes", id: zipCode },
-                  { hover: true }
-                );
-                setHoveredZipCode(zipCode);
-              }
-            }
-          }
-        });
+        // map.on("mousemove", "zip-codes-fill", (e) => {
+        //   if (e.features && e.features.length > 0) {
+        //     const feature = e.features[0];
+        //     if (feature.properties && feature.properties.ZIPCODE) {
+        //       const zipCode = feature.properties.ZIPCODE.toString();
+        //       if (hoveredZipCodeRef.current !== zipCode) {
+        //         if (hoveredZipCodeRef.current) {
+        //           map.setFeatureState(
+        //             {
+        //               source: "fairfax-zip-codes",
+        //               id: hoveredZipCodeRef.current,
+        //             },
+        //             { hover: false }
+        //           );
+        //         }
+        //         map.setFeatureState(
+        //           { source: "fairfax-zip-codes", id: zipCode },
+        //           { hover: true }
+        //         );
+        //         hoveredZipCodeRef.current = zipCode;
+        //       }
+        //     }
+        //   }
+        // });
 
-        map.on("mouseleave", "zip-codes-fill", () => {
-          if (hoveredZipCode) {
-            map.setFeatureState(
-              { source: "fairfax-zip-codes", id: hoveredZipCode },
-              { hover: false }
-            );
-            setHoveredZipCode(null);
-          }
-        });
+        // map.on("mouseleave", "zip-codes-fill", () => {
+        //   if (hoveredZipCodeRef.current) {
+        //     map.setFeatureState(
+        //       { source: "fairfax-zip-codes", id: hoveredZipCodeRef.current },
+        //       { hover: false }
+        //     );
+        //     hoveredZipCodeRef.current = null;
+        //   }
+        // });
 
+        // pretty important to set this to true!!!!
+        // so that the map style updates when the props change!!!
+        setMapLoaded(true);
         updateMapStyle();
       });
 
       return () => map.remove();
-    }, [updateMapStyle, hoveredZipCode]); // Added hoveredZipCode to the dependency array
+    }, [updateMapStyle]);
+
+    // Update map style when props change
+    useEffect(() => {
+      updateMapStyle();
+    }, [schoolRating, numHospitals, avgHomePrice, updateMapStyle]);
 
     return <div ref={mapContainerRef} className={styles.mapContainer} />;
   }
 );
 
-// Add a display name to the component
 MapComponent.displayName = "MapComponent";
 
 export default MapComponent;
