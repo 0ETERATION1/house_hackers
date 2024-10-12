@@ -5,6 +5,7 @@ import mapboxgl from "mapbox-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import fairfaxCountyBoundary from "../data/fairfax_county_boundary.geojson";
+import styles from "./MapComponent.module.css";
 
 const MapboxExample: React.FC = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -90,7 +91,7 @@ const MapboxExample: React.FC = () => {
     return () => map.remove();
   }, []);
 
-  return <div ref={mapContainerRef} style={{ height: "100%" }} />;
+  return <div ref={mapContainerRef} className={styles.mapContainer} />;
 };
 
 export default MapboxExample;

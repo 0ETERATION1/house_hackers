@@ -1,0 +1,19 @@
+.mainContainer {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mapSection {
+  width: 50%;
+  height: 100%;
+}
+
+.dataSection {
+  width: 50%;
+  height: 100%;
+  padding: 20px;
+  overflow-y: auto;
+}
+

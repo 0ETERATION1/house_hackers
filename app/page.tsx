@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
+import styles from "./page.module.css";
 
 const MapComponent = dynamic(() => import("./components/MapComponent"), {
   ssr: false,
@@ -18,8 +19,15 @@ export default function Home() {
   if (!isClient) return null;
 
   return (
-    <main style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
-      <MapComponent />
+    <main className={styles.mainContainer}>
+      <div className={styles.mapSection}>
+        <MapComponent />
+      </div>
+      <div className={styles.dataSection}>
+        {/* Add your data components here */}
+        <h2>Map Data</h2>
+        <p>This section will contain data about the map.</p>
+      </div>
     </main>
   );
 }
