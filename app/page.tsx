@@ -11,6 +11,7 @@ const MapComponent = dynamic(() => import("./components/MapComponent"), {
 
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
+  const [sliderValue, setSliderValue] = useState(2.5); // Initial value set to middle
 
   useEffect(() => {
     setIsClient(true);
@@ -24,9 +25,20 @@ export default function Home() {
         <MapComponent />
       </div>
       <div className={styles.dataSection}>
-        {/* Add your data components here */}
         <h2>Map Data</h2>
         <p>This section will contain data about the map.</p>
+        <div className={styles.sliderContainer}>
+          <input
+            type="range"
+            min="0"
+            max="5"
+            step="0.1"
+            value={sliderValue}
+            onChange={(e) => setSliderValue(parseFloat(e.target.value))}
+            className={styles.slider}
+          />
+          <p>Slider value: {sliderValue}</p>
+        </div>
       </div>
     </main>
   );
