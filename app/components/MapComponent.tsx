@@ -1,97 +1,110 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
-import fairfaxCountyBoundary from "../data/fairfax_county_boundary.geojson";
 import styles from "./MapComponent.module.css";
 
-const MapboxExample: React.FC = () => {
-  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+// Import the GeoJSON file
+import fairfaxZipCodes from "../data/fairfax_zip_codes.geojson";
+
+const MapComponent = () => {
+  const mapContainerRef = useRef(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
+  const [hoveredZipCode, setHoveredZipCode] = useState<string | null>(null);
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
-    // Use the environment variable for the Mapbox access token
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-      style: "mapbox://styles/aterskin/cm25ko62f007d01nqf56lhsoy",
-      center: [-77.2, 38.85], // Approximate center of Fairfax County
-      zoom: 9.5, // Adjusted zoom level for Fairfax County
+      style: "mapbox://styles/mapbox/light-v11",
+      center: [-77.2, 38.85], // Centered on Fairfax County
+      zoom: 9,
     });
 
     mapRef.current = map;
 
-    let hoveredPolygonId: number | string | null = null;
-
     map.on("load", () => {
-      map.addSource("fairfax", {
+      map.addSource("fairfax-zip-codes", {
         type: "geojson",
-        data: fairfaxCountyBoundary,
+        data: fairfaxZipCodes,
       });
 
-      // The feature-state dependent fill-opacity expression will render the hover effect
-      // when a feature's hover state is set to true.
       map.addLayer({
-        id: "fairfax-fill",
+        id: "zip-codes-fill",
         type: "fill",
-        source: "fairfax",
-        layout: {},
+        source: "fairfax-zip-codes",
         paint: {
-          "fill-color": "#627BC1",
+          "fill-color": [
+            "interpolate",
+            ["linear"],
+            ["to-number", ["get", "ZIPCODE"]],
+            20000,
+            "#f7fbff",
+            23000,
+            "#08306b",
+          ],
           "fill-opacity": [
             "case",
             ["boolean", ["feature-state", "hover"], false],
             0.8,
-            0.5,
+            0.6,
           ],
         },
       });
 
       map.addLayer({
-        id: "fairfax-border",
+        id: "zip-codes-outline",
         type: "line",
-        source: "fairfax",
-        layout: {},
+        source: "fairfax-zip-codes",
         paint: {
-          "line-color": "#627BC1",
-          "line-width": 2,
+          "line-color": "#000",
+          "line-width": 1,
         },
       });
 
-      map.on("mousemove", "fairfax-fill", (e) => {
-        if (e.features && e.features[0]) {
-          const newHoveredPolygonId = e.features[0].id;
-          if (newHoveredPolygonId != null) {
-            hoveredPolygonId = newHoveredPolygonId;
+      // Add hover effect
+      map.on("mousemove", "zip-codes-fill", (e) => {
+        if (e.features && e.features.length > 0) {
+          if (hoveredZipCode !== null) {
             map.setFeatureState(
-              { source: "fairfax", id: hoveredPolygonId },
+              { source: "fairfax-zip-codes", id: hoveredZipCode },
+              { hover: false }
+            );
+          }
+          const feature = e.features[0];
+          if (feature.properties && feature.properties.ZIPCODE) {
+            const zipCode = feature.properties.ZIPCODE;
+            setHoveredZipCode(zipCode);
+            map.setFeatureState(
+              { source: "fairfax-zip-codes", id: zipCode },
               { hover: true }
             );
           }
+          map.getCanvas().style.cursor = "pointer";
         }
       });
 
-      map.on("mouseleave", "fairfax-fill", () => {
-        if (hoveredPolygonId !== null) {
+      map.on("mouseleave", "zip-codes-fill", () => {
+        if (hoveredZipCode !== null) {
           map.setFeatureState(
-            { source: "fairfax", id: hoveredPolygonId },
+            { source: "fairfax-zip-codes", id: hoveredZipCode },
             { hover: false }
           );
         }
-        hoveredPolygonId = null;
+        setHoveredZipCode(null);
+        map.getCanvas().style.cursor = "";
       });
     });
 
     return () => map.remove();
-  }, []);
+  }, [hoveredZipCode]);
 
   return <div ref={mapContainerRef} className={styles.mapContainer} />;
 };
 
-export default MapboxExample;
+export default MapComponent;
