@@ -22,25 +22,50 @@ const MapComponent: React.FC<MapComponentProps> = React.memo(
   ({ schoolRating, numHospitals, avgHomePrice }) => {
     const mapContainerRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<mapboxgl.Map | null>(null);
-    const hoveredZipCodeRef = useRef<string | null>(null);
     const [mapLoaded, setMapLoaded] = useState(false);
+
+    // Function to interpolate between colors
+    const getColor = useCallback((value: number) => {
+      const red = [255, 0, 0];
+      const yellow = [255, 255, 0];
+      const green = [0, 255, 0];
+
+      let color;
+      if (value <= 50) {
+        const ratio = value / 50;
+        color = red.map((comp, i) =>
+          Math.round(comp + ratio * (yellow[i] - comp))
+        );
+      } else {
+        const ratio = (value - 50) / 50;
+        color = yellow.map((comp, i) =>
+          Math.round(comp + ratio * (green[i] - comp))
+        );
+      }
+
+      return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+    }, []);
 
     const updateMapStyle = useCallback(() => {
       const map = mapRef.current;
       if (map && mapLoaded && map.getLayer("zip-codes-fill")) {
-        map.setPaintProperty("zip-codes-fill", "fill-color", [
-          "interpolate",
-          ["linear"],
-          ["get", "value"],
-          0,
-          "#FF0000", // Red for low values
-          50,
-          "#FFFF00", // Yellow for medium values
-          100,
-          "#00FF00", // Green for high values
-        ]);
+        // Normalize the values to a 0-100 scale
+        const normalizedSchoolRating = ((schoolRating - 1) / 9) * 100;
+        const normalizedNumHospitals = (numHospitals / 5) * 100;
+        const normalizedAvgHomePrice = ((avgHomePrice - 200000) / 800000) * 100;
+
+        // Calculate an overall score (you can adjust the weights as needed)
+        const overallScore =
+          (normalizedSchoolRating +
+            normalizedNumHospitals +
+            normalizedAvgHomePrice) /
+          3;
+
+        const color = getColor(overallScore);
+
+        map.setPaintProperty("zip-codes-fill", "fill-color", color);
       }
-    }, [mapLoaded]);
+    }, [mapLoaded, schoolRating, numHospitals, avgHomePrice, getColor]);
 
     // Initialize map when component mounts
     useEffect(() => {
@@ -66,12 +91,7 @@ const MapComponent: React.FC<MapComponentProps> = React.memo(
           type: "fill",
           source: "fairfax-zip-codes",
           paint: {
-            "fill-color": [
-              "case",
-              ["boolean", ["feature-state", "hover"], false],
-              "#3A539B", // Darker blue for hovered state
-              "#627BC1", // Original blue for non-hovered state
-            ],
+            "fill-color": "#627BC1", // Initial color
             "fill-opacity": [
               "case",
               ["boolean", ["feature-state", "hover"], false],
@@ -147,8 +167,6 @@ const MapComponent: React.FC<MapComponentProps> = React.memo(
         //   }
         // });
 
-        // pretty important to set this to true!!!!
-        // so that the map style updates when the props change!!!
         setMapLoaded(true);
         updateMapStyle();
       });
