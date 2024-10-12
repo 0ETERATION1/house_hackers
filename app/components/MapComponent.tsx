@@ -6,16 +6,18 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import virginiaOutline from "../data/virginia_outline.geojson";
 
-const MapboxExample = () => {
-  const mapContainerRef = useRef<HTMLDivElement>(null);
+const MapboxExample: React.FC = () => {
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
 
   useEffect(() => {
+    if (!mapContainerRef.current) return;
+
     // Use the environment variable for the Mapbox access token
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
 
     const map = new mapboxgl.Map({
-      container: mapContainerRef.current!,
+      container: mapContainerRef.current,
       // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
       style: "mapbox://styles/aterskin/cm25ko62f007d01nqf56lhsoy",
       center: [-79.5, 37.5], // Approximate center of Virginia
@@ -89,9 +91,11 @@ const MapboxExample = () => {
         hoveredPolygonId = null;
       });
     });
+
+    return () => map.remove();
   }, []);
 
-  return <div id="map" ref={mapContainerRef} style={{ height: "100%" }} />;
+  return <div ref={mapContainerRef} style={{ height: "100%" }} />;
 };
 
 export default MapboxExample;
