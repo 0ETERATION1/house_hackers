@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
-import virginiaOutline from "../data/virginia_outline.geojson";
+import fairfaxCountyBoundary from "../data/fairfax_county_boundary.geojson";
 
 const MapboxExample: React.FC = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -20,8 +20,8 @@ const MapboxExample: React.FC = () => {
       container: mapContainerRef.current,
       // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
       style: "mapbox://styles/aterskin/cm25ko62f007d01nqf56lhsoy",
-      center: [-79.5, 37.5], // Approximate center of Virginia
-      zoom: 6, // Adjust this value to fit Virginia in the viewport
+      center: [-77.2, 38.85], // Approximate center of Fairfax County
+      zoom: 9.5, // Adjusted zoom level for Fairfax County
     });
 
     mapRef.current = map;
@@ -29,33 +29,33 @@ const MapboxExample: React.FC = () => {
     let hoveredPolygonId: number | string | null = null;
 
     map.on("load", () => {
-      map.addSource("virginia", {
+      map.addSource("fairfax", {
         type: "geojson",
-        data: virginiaOutline,
+        data: fairfaxCountyBoundary,
       });
 
       // The feature-state dependent fill-opacity expression will render the hover effect
       // when a feature's hover state is set to true.
       map.addLayer({
-        id: "virginia-fill",
+        id: "fairfax-fill",
         type: "fill",
-        source: "virginia",
+        source: "fairfax",
         layout: {},
         paint: {
           "fill-color": "#627BC1",
           "fill-opacity": [
             "case",
             ["boolean", ["feature-state", "hover"], false],
-            1,
+            0.8,
             0.5,
           ],
         },
       });
 
       map.addLayer({
-        id: "virginia-border",
+        id: "fairfax-border",
         type: "line",
-        source: "virginia",
+        source: "fairfax",
         layout: {},
         paint: {
           "line-color": "#627BC1",
@@ -63,28 +63,23 @@ const MapboxExample: React.FC = () => {
         },
       });
 
-      map.on("mousemove", "virginia-fill", (e) => {
-        if (e.features?.[0]) {
-          if (hoveredPolygonId !== null) {
+      map.on("mousemove", "fairfax-fill", (e) => {
+        if (e.features && e.features[0]) {
+          const newHoveredPolygonId = e.features[0].id;
+          if (newHoveredPolygonId != null) {
+            hoveredPolygonId = newHoveredPolygonId;
             map.setFeatureState(
-              { source: "virginia", id: hoveredPolygonId },
-              { hover: false }
-            );
-          }
-          hoveredPolygonId = e.features[0].id ?? null;
-          if (hoveredPolygonId !== null) {
-            map.setFeatureState(
-              { source: "virginia", id: hoveredPolygonId },
+              { source: "fairfax", id: hoveredPolygonId },
               { hover: true }
             );
           }
         }
       });
 
-      map.on("mouseleave", "virginia-fill", () => {
+      map.on("mouseleave", "fairfax-fill", () => {
         if (hoveredPolygonId !== null) {
           map.setFeatureState(
-            { source: "virginia", id: hoveredPolygonId },
+            { source: "fairfax", id: hoveredPolygonId },
             { hover: false }
           );
         }
