@@ -11,6 +11,8 @@ interface ZipCodeData {
   SchoolRating: number;
   NumHospitals: number;
   AvgHomePrice: number;
+  Population: number;
+  UnitsAvailable: number;
 }
 
 const MapComponent = dynamic(() => import("./components/MapComponent"), {
@@ -20,9 +22,11 @@ const MapComponent = dynamic(() => import("./components/MapComponent"), {
 
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
-  const [schoolRating, setSchoolRating] = useState(1);
-  const [numHospitals, setNumHospitals] = useState(0);
-  const [avgHomePrice, setAvgHomePrice] = useState(200000);
+  const [schoolRating, setSchoolRating] = useState(5);
+  const [numHospitals, setNumHospitals] = useState(2);
+  const [avgHomePrice, setAvgHomePrice] = useState(500000);
+  const [population, setPopulation] = useState(50000);
+  const [unitsAvailable, setUnitsAvailable] = useState(1000);
   const [topZipCodes, setTopZipCodes] = useState<ZipCodeData[]>([]);
 
   useEffect(() => {
@@ -45,11 +49,11 @@ export default function Home() {
           <input
             type="range"
             id="schoolRating"
-            min="1"
-            max="10"
-            step="1"
+            min="2.6"
+            max="9"
+            step="0.1"
             value={schoolRating}
-            onChange={(e) => setSchoolRating(parseInt(e.target.value))}
+            onChange={(e) => setSchoolRating(parseFloat(e.target.value))}
             className={styles.slider}
           />
           <p>School Rating: {schoolRating}</p>
@@ -61,7 +65,7 @@ export default function Home() {
             type="range"
             id="numHospitals"
             min="0"
-            max="5"
+            max="4"
             step="1"
             value={numHospitals}
             onChange={(e) => setNumHospitals(parseInt(e.target.value))}
@@ -72,13 +76,13 @@ export default function Home() {
 
         <div className={styles.sliderContainer}>
           <label htmlFor="avgHomePrice">
-            Average Home Price ($200,000 - $1,000,000):
+            Average Home Price ($200,000 - $2,000,000):
           </label>
           <input
             type="range"
             id="avgHomePrice"
-            min="200000"
-            max="1000000"
+            min="286667"
+            max="1567004"
             step="10000"
             value={avgHomePrice}
             onChange={(e) => setAvgHomePrice(parseInt(e.target.value))}
@@ -87,10 +91,42 @@ export default function Home() {
           <p>Average Home Price: ${avgHomePrice.toLocaleString()}</p>
         </div>
 
+        <div className={styles.sliderContainer}>
+          <label htmlFor="population">Population (0 - 100,000):</label>
+          <input
+            type="range"
+            id="population"
+            min="0"
+            max="58404"
+            step="1000"
+            value={population}
+            onChange={(e) => setPopulation(parseInt(e.target.value))}
+            className={styles.slider}
+          />
+          <p>Population: {population.toLocaleString()}</p>
+        </div>
+
+        <div className={styles.sliderContainer}>
+          <label htmlFor="unitsAvailable">Units Available (0 - 5,000):</label>
+          <input
+            type="range"
+            id="unitsAvailable"
+            min="0"
+            max="10720"
+            step="100"
+            value={unitsAvailable}
+            onChange={(e) => setUnitsAvailable(parseInt(e.target.value))}
+            className={styles.slider}
+          />
+          <p>Units Available: {unitsAvailable.toLocaleString()}</p>
+        </div>
+
         <TopZipCodes
           schoolRating={schoolRating}
           numHospitals={numHospitals}
           avgHomePrice={avgHomePrice}
+          population={population}
+          unitsAvailable={unitsAvailable}
           onTopZipCodesChange={setTopZipCodes}
         />
       </div>

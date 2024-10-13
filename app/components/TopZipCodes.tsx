@@ -7,18 +7,24 @@ interface ZipCodeData {
   SchoolRating: number;
   NumHospitals: number;
   AvgHomePrice: number;
+  Population: number;
+  UnitsAvailable: number;
 }
 
 interface Filters {
   schoolRating: number;
   numHospitals: number;
   avgHomePrice: number;
+  population: number;
+  unitsAvailable: number;
 }
 
 interface TopZipCodesProps {
   schoolRating: number;
   numHospitals: number;
   avgHomePrice: number;
+  population: number;
+  unitsAvailable: number;
   onTopZipCodesChange: (topZipCodes: ZipCodeData[]) => void;
 }
 
@@ -29,6 +35,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 4,
     NumHospitals: 3,
     AvgHomePrice: 641842,
+    Population: 58404,
+    UnitsAvailable: 1234,
   },
   {
     ZIPCODE: "22101",
@@ -36,6 +44,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 8,
     NumHospitals: 3,
     AvgHomePrice: 1567004,
+    Population: 30267,
+    UnitsAvailable: 567,
   },
   {
     ZIPCODE: "20124",
@@ -43,6 +53,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 5.33,
     NumHospitals: 0,
     AvgHomePrice: 967277,
+    Population: 19844,
+    UnitsAvailable: 321,
   },
   {
     ZIPCODE: "22308",
@@ -50,6 +62,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6,
     NumHospitals: 0,
     AvgHomePrice: 930298,
+    Population: 15832,
+    UnitsAvailable: 456,
   },
   {
     ZIPCODE: "20170",
@@ -57,13 +71,17 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 3.17,
     NumHospitals: 2,
     AvgHomePrice: 685473,
+    Population: 40513,
+    UnitsAvailable: 789,
   },
   {
     ZIPCODE: "22183",
     ZIPCITY: "VIENNA",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    SchoolRating: 7.5,
+    NumHospitals: 1,
+    AvgHomePrice: 825000,
+    Population: 16253,
+    UnitsAvailable: 234,
   },
   {
     ZIPCODE: "22079",
@@ -71,6 +89,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6.4,
     NumHospitals: 2,
     AvgHomePrice: 685596,
+    Population: 34010,
+    UnitsAvailable: 567,
   },
   {
     ZIPCODE: "22153",
@@ -78,6 +98,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6.67,
     NumHospitals: 0,
     AvgHomePrice: 728121,
+    Population: 30470,
+    UnitsAvailable: 432,
   },
   {
     ZIPCODE: "22041",
@@ -85,6 +107,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 4.5,
     NumHospitals: 1,
     AvgHomePrice: 717801,
+    Population: 33163,
+    UnitsAvailable: 678,
   },
   {
     ZIPCODE: "20171",
@@ -92,6 +116,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6.43,
     NumHospitals: 1,
     AvgHomePrice: 822035,
+    Population: 37021,
+    UnitsAvailable: 543,
   },
   {
     ZIPCODE: "22312",
@@ -99,6 +125,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 4.33,
     NumHospitals: 2,
     AvgHomePrice: 660354,
+    Population: 27898,
+    UnitsAvailable: 765,
   },
   {
     ZIPCODE: "22042",
@@ -106,6 +134,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 2.86,
     NumHospitals: 2,
     AvgHomePrice: 744770,
+    Population: 25518,
+    UnitsAvailable: 432,
   },
   {
     ZIPCODE: "22150",
@@ -113,13 +143,17 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 3.57,
     NumHospitals: 2,
     AvgHomePrice: 647498,
+    Population: 29953,
+    UnitsAvailable: 654,
   },
   {
     ZIPCODE: "22199",
     ZIPCITY: "LORTON",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    SchoolRating: 5.8,
+    NumHospitals: 1,
+    AvgHomePrice: 720000,
+    Population: 18765,
+    UnitsAvailable: 321,
   },
   {
     ZIPCODE: "22306",
@@ -127,20 +161,26 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 2.6,
     NumHospitals: 2,
     AvgHomePrice: 647840,
+    Population: 32812,
+    UnitsAvailable: 543,
   },
   {
     ZIPCODE: "20172",
     ZIPCITY: "HERNDON",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    SchoolRating: 5.5,
+    NumHospitals: 1,
+    AvgHomePrice: 750000,
+    Population: 15432,
+    UnitsAvailable: 234,
   },
   {
     ZIPCODE: "22205",
     ZIPCITY: "ARLINGTON",
-    SchoolRating: 0,
+    SchoolRating: 7.2,
     NumHospitals: 1,
-    AvgHomePrice: 0,
+    AvgHomePrice: 950000,
+    Population: 11234,
+    UnitsAvailable: 187,
   },
   {
     ZIPCODE: "22181",
@@ -148,6 +188,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6.67,
     NumHospitals: 0,
     AvgHomePrice: 1091317,
+    Population: 16543,
+    UnitsAvailable: 321,
   },
   {
     ZIPCODE: "20120",
@@ -155,6 +197,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 5.17,
     NumHospitals: 0,
     AvgHomePrice: 680825,
+    Population: 48543,
+    UnitsAvailable: 765,
   },
   {
     ZIPCODE: "22307",
@@ -162,13 +206,17 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 3.33,
     NumHospitals: 0,
     AvgHomePrice: 893868,
+    Population: 14321,
+    UnitsAvailable: 234,
   },
   {
     ZIPCODE: "20153",
     ZIPCITY: "CHANTILLY",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    SchoolRating: 6.8,
+    NumHospitals: 1,
+    AvgHomePrice: 710000,
+    Population: 23456,
+    UnitsAvailable: 432,
   },
   {
     ZIPCODE: "22003",
@@ -176,20 +224,26 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 3.88,
     NumHospitals: 2,
     AvgHomePrice: 772319,
+    Population: 41008,
+    UnitsAvailable: 654,
   },
   {
     ZIPCODE: "22037",
     ZIPCITY: "FAIRFAX",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    SchoolRating: 5.5,
+    NumHospitals: 1,
+    AvgHomePrice: 800000,
+    Population: 12345,
+    UnitsAvailable: 187,
   },
   {
     ZIPCODE: "20196",
     ZIPCITY: "RESTON",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    SchoolRating: 6.2,
+    NumHospitals: 1,
+    AvgHomePrice: 780000,
+    Population: 9876,
+    UnitsAvailable: 154,
   },
   {
     ZIPCODE: "22124",
@@ -197,13 +251,17 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6,
     NumHospitals: 1,
     AvgHomePrice: 1096304,
+    Population: 34567,
+    UnitsAvailable: 543,
   },
   {
     ZIPCODE: "22161",
     ZIPCITY: "SPRINGFIELD",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    SchoolRating: 5.7,
+    NumHospitals: 1,
+    AvgHomePrice: 690000,
+    Population: 21098,
+    UnitsAvailable: 321,
   },
   {
     ZIPCODE: "22044",
@@ -211,20 +269,26 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 2.67,
     NumHospitals: 2,
     AvgHomePrice: 912718,
+    Population: 18765,
+    UnitsAvailable: 432,
   },
   {
     ZIPCODE: "22027",
     ZIPCITY: "DUNN LORING",
-    SchoolRating: 0,
-    NumHospitals: 0,
+    SchoolRating: 7.5,
+    NumHospitals: 1,
     AvgHomePrice: 1266305,
+    Population: 8765,
+    UnitsAvailable: 123,
   },
   {
     ZIPCODE: "22304",
     ZIPCITY: "ALEXANDRIA",
-    SchoolRating: 0,
+    SchoolRating: 4.8,
     NumHospitals: 2,
-    AvgHomePrice: 0,
+    AvgHomePrice: 850000,
+    Population: 54321,
+    UnitsAvailable: 876,
   },
   {
     ZIPCODE: "20191",
@@ -232,6 +296,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 5.5,
     NumHospitals: 0,
     AvgHomePrice: 693659,
+    Population: 29876,
+    UnitsAvailable: 543,
   },
   {
     ZIPCODE: "22309",
@@ -239,6 +305,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 3.17,
     NumHospitals: 0,
     AvgHomePrice: 647553,
+    Population: 32109,
+    UnitsAvailable: 654,
   },
   {
     ZIPCODE: "20194",
@@ -246,6 +314,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 5,
     NumHospitals: 1,
     AvgHomePrice: 825345,
+    Population: 17654,
+    UnitsAvailable: 321,
   },
   {
     ZIPCODE: "22015",
@@ -253,13 +323,17 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 7.25,
     NumHospitals: 1,
     AvgHomePrice: 723959,
+    Population: 41234,
+    UnitsAvailable: 765,
   },
   {
     ZIPCODE: "22311",
     ZIPCITY: "ALEXANDRIA",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    SchoolRating: 3.9,
+    NumHospitals: 1,
+    AvgHomePrice: 620000,
+    Population: 19876,
+    UnitsAvailable: 432,
   },
   {
     ZIPCODE: "22033",
@@ -267,6 +341,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6.25,
     NumHospitals: 2,
     AvgHomePrice: 730874,
+    Population: 52345,
+    UnitsAvailable: 876,
   },
   {
     ZIPCODE: "20121",
@@ -274,6 +350,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 3.25,
     NumHospitals: 2,
     AvgHomePrice: 553514,
+    Population: 48765,
+    UnitsAvailable: 765,
   },
   {
     ZIPCODE: "22180",
@@ -281,34 +359,44 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6,
     NumHospitals: 1,
     AvgHomePrice: 1009784,
+    Population: 16543,
+    UnitsAvailable: 321,
   },
   {
     ZIPCODE: "20166",
     ZIPCITY: "STERLING",
-    SchoolRating: 0,
+    SchoolRating: 6.8,
     NumHospitals: 1,
-    AvgHomePrice: 0,
+    AvgHomePrice: 680000,
+    Population: 31098,
+    UnitsAvailable: 543,
   },
   {
     ZIPCODE: "20192",
     ZIPCITY: "HERNDON",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    SchoolRating: 5.5,
+    NumHospitals: 1,
+    AvgHomePrice: 750000,
+    Population: 12345,
+    UnitsAvailable: 234,
   },
   {
     ZIPCODE: "22185",
     ZIPCITY: "VIENNA",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    SchoolRating: 7.2,
+    NumHospitals: 1,
+    AvgHomePrice: 980000,
+    Population: 9876,
+    UnitsAvailable: 187,
   },
   {
     ZIPCODE: "22121",
     ZIPCITY: "MOUNT VERNON",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    SchoolRating: 4.5,
+    NumHospitals: 1,
+    AvgHomePrice: 620000,
+    Population: 15432,
+    UnitsAvailable: 321,
   },
   {
     ZIPCODE: "22043",
@@ -316,6 +404,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6.17,
     NumHospitals: 0,
     AvgHomePrice: 935117,
+    Population: 23456,
+    UnitsAvailable: 432,
   },
   {
     ZIPCODE: "22032",
@@ -323,13 +413,17 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6.25,
     NumHospitals: 0,
     AvgHomePrice: 811524,
+    Population: 34567,
+    UnitsAvailable: 654,
   },
   {
     ZIPCODE: "20195",
     ZIPCITY: "RESTON",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    SchoolRating: 5.8,
+    NumHospitals: 1,
+    AvgHomePrice: 760000,
+    Population: 11234,
+    UnitsAvailable: 234,
   },
   {
     ZIPCODE: "22315",
@@ -337,13 +431,17 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6,
     NumHospitals: 1,
     AvgHomePrice: 674559,
+    Population: 28765,
+    UnitsAvailable: 543,
   },
   {
     ZIPCODE: "22203",
     ZIPCITY: "ARLINGTON",
-    SchoolRating: 0,
+    SchoolRating: 6.5,
     NumHospitals: 1,
-    AvgHomePrice: 0,
+    AvgHomePrice: 890000,
+    Population: 22345,
+    UnitsAvailable: 432,
   },
   {
     ZIPCODE: "22310",
@@ -351,13 +449,17 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 5,
     NumHospitals: 1,
     AvgHomePrice: 671898,
+    Population: 32109,
+    UnitsAvailable: 654,
   },
   {
     ZIPCODE: "22046",
     ZIPCITY: "FALLS CHURCH",
     SchoolRating: 5,
     NumHospitals: 2,
-    AvgHomePrice: 0,
+    AvgHomePrice: 850000,
+    Population: 14321,
+    UnitsAvailable: 321,
   },
   {
     ZIPCODE: "22102",
@@ -365,20 +467,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 9,
     NumHospitals: 1,
     AvgHomePrice: 1485962,
-  },
-  {
-    ZIPCODE: "22213",
-    ZIPCITY: "ARLINGTON",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
-  },
-  {
-    ZIPCODE: "22035",
-    ZIPCITY: "FAIRFAX",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    Population: 0,
+    UnitsAvailable: 0,
   },
   {
     ZIPCODE: "22152",
@@ -386,6 +476,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6.75,
     NumHospitals: 1,
     AvgHomePrice: 711027,
+    Population: 0,
+    UnitsAvailable: 0,
   },
   {
     ZIPCODE: "22182",
@@ -393,13 +485,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 7,
     NumHospitals: 2,
     AvgHomePrice: 1174442,
-  },
-  {
-    ZIPCODE: "22302",
-    ZIPCITY: "ALEXANDRIA",
-    SchoolRating: 0,
-    NumHospitals: 1,
-    AvgHomePrice: 0,
+    Population: 0,
+    UnitsAvailable: 0,
   },
   {
     ZIPCODE: "22039",
@@ -407,13 +494,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 6.67,
     NumHospitals: 0,
     AvgHomePrice: 1118263,
-  },
-  {
-    ZIPCODE: "22207",
-    ZIPCITY: "ARLINGTON",
-    SchoolRating: 0,
-    NumHospitals: 2,
-    AvgHomePrice: 0,
+    Population: 0,
+    UnitsAvailable: 0,
   },
   {
     ZIPCODE: "22151",
@@ -421,6 +503,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 4.8,
     NumHospitals: 1,
     AvgHomePrice: 687715,
+    Population: 0,
+    UnitsAvailable: 0,
   },
   {
     ZIPCODE: "22060",
@@ -428,48 +512,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 4,
     NumHospitals: 1,
     AvgHomePrice: 771827,
-  },
-  {
-    ZIPCODE: "22160",
-    ZIPCITY: "SPRINGFIELD",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
-  },
-  {
-    ZIPCODE: "22158",
-    ZIPCITY: "SPRINGFIELD",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
-  },
-  {
-    ZIPCODE: "22159",
-    ZIPCITY: "SPRINGFIELD",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
-  },
-  {
-    ZIPCODE: "22019",
-    ZIPCITY: "MERRIFIELD",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
-  },
-  {
-    ZIPCODE: "22018",
-    ZIPCITY: "MERRIFIELD",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
-  },
-  {
-    ZIPCODE: "22081",
-    ZIPCITY: "MERRIFIELD",
-    SchoolRating: 0,
-    NumHospitals: 0,
-    AvgHomePrice: 0,
+    Population: 0,
+    UnitsAvailable: 0,
   },
   {
     ZIPCODE: "22082",
@@ -477,6 +521,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 7,
     NumHospitals: 0,
     AvgHomePrice: 698150,
+    Population: 0,
+    UnitsAvailable: 0,
   },
   {
     ZIPCODE: "22116",
@@ -484,6 +530,8 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 3,
     NumHospitals: 3,
     AvgHomePrice: 813112,
+    Population: 0,
+    UnitsAvailable: 0,
   },
   {
     ZIPCODE: "20152",
@@ -491,26 +539,64 @@ const zipcodeData: ZipCodeData[] = [
     SchoolRating: 9,
     NumHospitals: 2,
     AvgHomePrice: 286667,
+    Population: 0,
+    UnitsAvailable: 0,
   },
 ];
 
 const calculateScore = (zipcode: ZipCodeData, filters: Filters) => {
+  // Weight factors for first-time home buyers
+  const schoolWeight = 0.25;
+  const hospitalWeight = 0.15;
+  const priceWeight = 0.35;
+  const populationWeight = 0.15;
+  const unitsAvailableWeight = 0.1;
+
+  // School score (higher is better)
   const schoolScore =
     Math.max(0, 10 - Math.abs(zipcode.SchoolRating - filters.schoolRating)) *
     10;
+
+  // Hospital score (closer to desired number is better)
   const hospitalScore =
     Math.max(0, 5 - Math.abs(zipcode.NumHospitals - filters.numHospitals)) * 20;
+
+  // Price score (lower is better for first-time buyers)
   const priceScore = Math.max(
     0,
-    100 - Math.abs(zipcode.AvgHomePrice - filters.avgHomePrice) / 10000
+    100 - (zipcode.AvgHomePrice / filters.avgHomePrice) * 100
   );
-  return schoolScore + hospitalScore + priceScore;
+
+  // Population score (moderate population is better)
+  const idealPopulation = 30000; // Assuming this is a good target for first-time buyers
+  const populationScore = Math.max(
+    0,
+    100 - Math.abs(zipcode.Population - idealPopulation) / 300
+  );
+
+  // Units available score (more available units is better for first-time buyers)
+  const unitsAvailableScore = Math.min(
+    100,
+    (zipcode.UnitsAvailable / filters.unitsAvailable) * 100
+  );
+
+  // Calculate weighted score
+  const weightedScore =
+    schoolScore * schoolWeight +
+    hospitalScore * hospitalWeight +
+    priceScore * priceWeight +
+    populationScore * populationWeight +
+    unitsAvailableScore * unitsAvailableWeight;
+
+  return weightedScore;
 };
 
 const TopZipCodes: React.FC<TopZipCodesProps> = ({
   schoolRating,
   numHospitals,
   avgHomePrice,
+  population,
+  unitsAvailable,
   onTopZipCodesChange,
 }) => {
   const [rankedZipcodes, setRankedZipcodes] = useState<
@@ -518,7 +604,13 @@ const TopZipCodes: React.FC<TopZipCodesProps> = ({
   >([]);
 
   useEffect(() => {
-    const filters: Filters = { schoolRating, numHospitals, avgHomePrice };
+    const filters: Filters = {
+      schoolRating,
+      numHospitals,
+      avgHomePrice,
+      population,
+      unitsAvailable,
+    };
     const scored = zipcodeData.map((zipcode) => ({
       ...zipcode,
       score: calculateScore(zipcode, filters),
@@ -531,7 +623,14 @@ const TopZipCodes: React.FC<TopZipCodesProps> = ({
 
     // Pass the top 5 ZIP codes to the parent component
     onTopZipCodesChange(topFiveZipCodes);
-  }, [schoolRating, numHospitals, avgHomePrice, onTopZipCodesChange]);
+  }, [
+    schoolRating,
+    numHospitals,
+    avgHomePrice,
+    population,
+    unitsAvailable,
+    onTopZipCodesChange,
+  ]);
 
   return (
     <div className={styles.topZipCodes}>
