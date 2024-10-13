@@ -5,7 +5,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Create Next App",
+  title: "house_hackers",
   description: "Find Your New Home!",
 };
 

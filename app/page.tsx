@@ -52,8 +52,8 @@ export default function Home() {
         <MapComponent topZipCodes={topZipCodes} />
       </div>
       <div className={styles.dataSection}>
-        <h2>Map Data</h2>
-        <p>Adjust the sliders to filter the map data.</p>
+        {/* <h2>Map Data</h2> */}
+        <p>Adjust the sliders to filter the map data!</p>
 
         <div className={styles.sliderContainer}>
           <label htmlFor="schoolRating">School Rating (1-10):</label>
