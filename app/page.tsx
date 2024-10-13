@@ -5,6 +5,14 @@ import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import TopZipCodes from "./components/TopZipCodes";
 
+interface ZipCodeData {
+  ZIPCODE: string;
+  ZIPCITY: string;
+  SchoolRating: number;
+  NumHospitals: number;
+  AvgHomePrice: number;
+}
+
 const MapComponent = dynamic(() => import("./components/MapComponent"), {
   ssr: false,
   loading: () => <div>Loading map component...</div>,
@@ -15,6 +23,7 @@ export default function Home() {
   const [schoolRating, setSchoolRating] = useState(1);
   const [numHospitals, setNumHospitals] = useState(0);
   const [avgHomePrice, setAvgHomePrice] = useState(200000);
+  const [topZipCodes, setTopZipCodes] = useState<ZipCodeData[]>([]);
 
   useEffect(() => {
     setIsClient(true);
@@ -25,11 +34,7 @@ export default function Home() {
   return (
     <main className={styles.mainContainer}>
       <div className={styles.mapSection}>
-        <MapComponent
-          schoolRating={schoolRating}
-          numHospitals={numHospitals}
-          avgHomePrice={avgHomePrice}
-        />
+        <MapComponent topZipCodes={topZipCodes} />
       </div>
       <div className={styles.dataSection}>
         <h2>Map Data</h2>
@@ -86,6 +91,7 @@ export default function Home() {
           schoolRating={schoolRating}
           numHospitals={numHospitals}
           avgHomePrice={avgHomePrice}
+          onTopZipCodesChange={setTopZipCodes}
         />
       </div>
     </main>

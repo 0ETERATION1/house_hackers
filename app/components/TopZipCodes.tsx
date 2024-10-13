@@ -9,10 +9,17 @@ interface ZipCodeData {
   AvgHomePrice: number;
 }
 
+interface Filters {
+  schoolRating: number;
+  numHospitals: number;
+  avgHomePrice: number;
+}
+
 interface TopZipCodesProps {
   schoolRating: number;
   numHospitals: number;
   avgHomePrice: number;
+  onTopZipCodesChange: (topZipCodes: ZipCodeData[]) => void;
 }
 
 const zipcodeData: ZipCodeData[] = [
@@ -487,7 +494,7 @@ const zipcodeData: ZipCodeData[] = [
   },
 ];
 
-const calculateScore = (zipcode: ZipCodeData, filters: TopZipCodesProps) => {
+const calculateScore = (zipcode: ZipCodeData, filters: Filters) => {
   const schoolScore =
     Math.max(0, 10 - Math.abs(zipcode.SchoolRating - filters.schoolRating)) *
     10;
@@ -504,20 +511,27 @@ const TopZipCodes: React.FC<TopZipCodesProps> = ({
   schoolRating,
   numHospitals,
   avgHomePrice,
+  onTopZipCodesChange,
 }) => {
   const [rankedZipcodes, setRankedZipcodes] = useState<
     (ZipCodeData & { score: number })[]
   >([]);
 
   useEffect(() => {
-    const filters = { schoolRating, numHospitals, avgHomePrice };
+    const filters: Filters = { schoolRating, numHospitals, avgHomePrice };
     const scored = zipcodeData.map((zipcode) => ({
       ...zipcode,
       score: calculateScore(zipcode, filters),
     }));
     const ranked = scored.sort((a, b) => b.score - a.score);
     setRankedZipcodes(ranked);
-  }, [schoolRating, numHospitals, avgHomePrice]);
+
+    // Get the top 5 ZIP codes
+    const topFiveZipCodes = ranked.slice(0, 5);
+
+    // Pass the top 5 ZIP codes to the parent component
+    onTopZipCodesChange(topFiveZipCodes);
+  }, [schoolRating, numHospitals, avgHomePrice, onTopZipCodesChange]);
 
   return (
     <div className={styles.topZipCodes}>
