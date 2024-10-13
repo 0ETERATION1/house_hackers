@@ -1,6 +1,7 @@
+// app/components/MapComponent.tsx
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import mapboxgl from "mapbox-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -12,65 +13,58 @@ import fairfaxZipCodes from "../data/fairfax_zip_codes.geojson";
 // Set the access token
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 
-interface MapComponentProps {
-  schoolRating: number;
-  numHospitals: number;
-  avgHomePrice: number;
+interface ZipCodeData {
+  ZIPCODE: string;
+  ZIPCITY: string;
+  SchoolRating: number;
+  NumHospitals: number;
+  AvgHomePrice: number;
 }
 
-const MapComponent: React.FC<MapComponentProps> = ({
-  schoolRating,
-  numHospitals,
-  avgHomePrice,
-}) => {
+interface MapComponentProps {
+  topZipCodes: ZipCodeData[];
+}
+
+const MapComponent: React.FC<MapComponentProps> = ({ topZipCodes }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  // Function to interpolate between colors
-  const getColor = (value: number) => {
-    const red = [255, 0, 0];
-    const yellow = [255, 255, 0];
-    const green = [0, 255, 0];
-
-    let colorComponents;
-    if (value <= 50) {
-      const ratio = value / 50;
-      colorComponents = red.map((comp, i) =>
-        Math.round(comp + ratio * (yellow[i] - comp))
-      );
-    } else {
-      const ratio = (value - 50) / 50;
-      colorComponents = yellow.map((comp, i) =>
-        Math.round(comp + ratio * (green[i] - comp))
-      );
-    }
-
-    return `rgb(${colorComponents[0]}, ${colorComponents[1]}, ${colorComponents[2]})`;
+  // Function to get color based on rank
+  const getColorByRank = (rank: number): string => {
+    const colors = [
+      [0, 255, 0], // Green for 1st place
+      [173, 255, 47], // GreenYellow for 2nd place
+      [255, 255, 0], // Yellow for 3rd place
+      [255, 165, 0], // Orange for 4th place
+      [255, 0, 0], // Red for 5th place
+    ];
+    const color = colors[rank] || [255, 255, 255]; // Default to white
+    return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
   };
 
   // Function to update map style
-  const updateMapStyle = () => {
+  const updateMapStyle = useCallback(() => {
     const map = mapRef.current;
     if (map && mapLoaded && map.getLayer("zip-codes-fill")) {
-      // Normalize the values to a 0-100 scale
-      const normalizedSchoolRating = ((schoolRating - 1) / 9) * 100;
-      const normalizedNumHospitals = (numHospitals / 5) * 100;
-      const normalizedAvgHomePrice = ((avgHomePrice - 200000) / 800000) * 100;
+      const matchExpression: any[] = ["match", ["get", "ZIPCODE"]];
 
-      // Calculate an overall score (you can adjust the weights as needed)
-      const overallScore =
-        (normalizedSchoolRating +
-          normalizedNumHospitals +
-          normalizedAvgHomePrice) /
-        3;
+      topZipCodes.forEach((zipcodeData, index) => {
+        const zipCode = Number(zipcodeData.ZIPCODE); // Ensure data type matches GeoJSON
+        matchExpression.push(zipCode, getColorByRank(index));
+      });
 
-      const color = getColor(overallScore);
+      // Add a default color (transparent)
+      matchExpression.push("rgba(0, 0, 0, 0)");
 
-      // Update only the fill-color property
-      map.setPaintProperty("zip-codes-fill", "fill-color", color);
+      // Update the fill-color property using the match expression
+      map.setPaintProperty(
+        "zip-codes-fill",
+        "fill-color",
+        matchExpression as mapboxgl.Expression
+      );
     }
-  };
+  }, [topZipCodes, mapLoaded]);
 
   // Initialize map when component mounts
   useEffect(() => {
@@ -96,9 +90,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
         type: "fill",
         source: "fairfax-zip-codes",
         paint: {
-          "fill-color": "#627BC1", // Initial color
+          "fill-color": "rgba(0, 0, 0, 0)", // Default transparent
           "fill-opacity": 0.5,
-          "fill-color-transition": { duration: 300 },
         },
       });
 
@@ -129,23 +122,22 @@ const MapComponent: React.FC<MapComponentProps> = ({
       });
 
       setMapLoaded(true);
-      updateMapStyle(); // Apply initial style based on the current slider values
+
+      // Initial style update
+      updateMapStyle();
     });
 
     return () => {
       map.remove();
     };
-  }, []); // Empty dependency array ensures this runs once on mount
+  }, []); // Empty dependency array, so this runs only once on mount
 
-  // Update map style when props change
+  // Update map style when topZipCodes change
   useEffect(() => {
     updateMapStyle();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [schoolRating, numHospitals, avgHomePrice]);
+  }, [topZipCodes, updateMapStyle]);
 
   return <div ref={mapContainerRef} className={styles.mapContainer} />;
 };
-
-MapComponent.displayName = "MapComponent";
 
 export default MapComponent;
