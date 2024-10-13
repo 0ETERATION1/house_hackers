@@ -591,6 +591,19 @@ const calculateScore = (zipcode: ZipCodeData, filters: Filters) => {
   return weightedScore;
 };
 
+// Function to get color based on rank
+const getColorByRank = (rank: number): string => {
+  const colors = [
+    [0, 255, 0], // Green for 1st place
+    [173, 255, 47], // GreenYellow for 2nd place
+    [255, 255, 0], // Yellow for 3rd place
+    [255, 165, 0], // Orange for 4th place
+    [255, 0, 0], // Red for 5th place
+  ];
+  const color = colors[rank] || [255, 255, 255]; // Default to white
+  return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+};
+
 const TopZipCodes: React.FC<TopZipCodesProps> = ({
   schoolRating,
   numHospitals,
@@ -635,9 +648,18 @@ const TopZipCodes: React.FC<TopZipCodesProps> = ({
   return (
     <div className={styles.topZipCodes}>
       <h2>Top 5 ZIP Codes</h2>
-      <ul>
+      <ul className={styles.zipCodeList}>
         {rankedZipcodes.slice(0, 5).map((zipcode, index) => (
-          <li key={zipcode.ZIPCODE}>
+          <li
+            key={zipcode.ZIPCODE}
+            style={{
+              backgroundColor: getColorByRank(index),
+              color: "#000",
+              padding: "5px",
+              margin: "5px 0",
+              borderRadius: "4px",
+            }}
+          >
             {index + 1}. {zipcode.ZIPCODE} - {zipcode.ZIPCITY} (Score:{" "}
             {zipcode.score.toFixed(2)})
           </li>
