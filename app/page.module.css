@@ -68,3 +68,33 @@
 .topZipCodes li:hover {
   background-color: #e8e8e8;
 }
+
+.resetButton {
+  background-color: #ff4136; /* Red background */
+  border: none;
+  color: white;
+  padding: 10px 20px; /* Reduced padding */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.resetButton:hover {
+  background-color: #e60000; /* Darker red on hover */
+}
+
+.resetButton:active {
+  background-color: #cc0000; /* Even darker red when pressed */
+  box-shadow: 0 2px #999;
+  transform: translateY(2px);
+}
+
+.buttonContainer {
+  margin: 20px 0;
+  text-align: center;
+}

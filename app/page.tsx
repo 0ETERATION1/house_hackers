@@ -132,9 +132,11 @@ export default function Home() {
           <p>Units Available: {unitsAvailable.toLocaleString()}</p>
         </div>
 
-        <button onClick={resetSliders} className={styles.resetButton}>
-          Reset Sliders
-        </button>
+        <div className={styles.buttonContainer}>
+          <button onClick={resetSliders} className={styles.resetButton}>
+            Reset Sliders
+          </button>
+        </div>
 
         <TopZipCodes
           schoolRating={schoolRating}
