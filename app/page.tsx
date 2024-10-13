@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import TopZipCodes from "./components/TopZipCodes";
 
+// Import or define ZipCodeData interface
 interface ZipCodeData {
   ZIPCODE: string;
   ZIPCITY: string;
@@ -22,16 +23,26 @@ const MapComponent = dynamic(() => import("./components/MapComponent"), {
 
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
-  const [schoolRating, setSchoolRating] = useState(5);
-  const [numHospitals, setNumHospitals] = useState(2);
-  const [avgHomePrice, setAvgHomePrice] = useState(500000);
-  const [population, setPopulation] = useState(50000);
-  const [unitsAvailable, setUnitsAvailable] = useState(1000);
+  const [schoolRating, setSchoolRating] = useState(0);
+  const [numHospitals, setNumHospitals] = useState(0);
+  const [avgHomePrice, setAvgHomePrice] = useState(0);
+  const [population, setPopulation] = useState(0);
+  const [unitsAvailable, setUnitsAvailable] = useState(0);
+  // Specify the type for topZipCodes
   const [topZipCodes, setTopZipCodes] = useState<ZipCodeData[]>([]);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Function to reset sliders to 0
+  const resetSliders = () => {
+    setSchoolRating(0);
+    setNumHospitals(0);
+    setAvgHomePrice(0);
+    setPopulation(0);
+    setUnitsAvailable(0);
+  };
 
   if (!isClient) return null;
 
@@ -49,8 +60,8 @@ export default function Home() {
           <input
             type="range"
             id="schoolRating"
-            min="2.6"
-            max="9"
+            min="0"
+            max="10"
             step="0.1"
             value={schoolRating}
             onChange={(e) => setSchoolRating(parseFloat(e.target.value))}
@@ -65,7 +76,7 @@ export default function Home() {
             type="range"
             id="numHospitals"
             min="0"
-            max="4"
+            max="5"
             step="1"
             value={numHospitals}
             onChange={(e) => setNumHospitals(parseInt(e.target.value))}
@@ -76,13 +87,13 @@ export default function Home() {
 
         <div className={styles.sliderContainer}>
           <label htmlFor="avgHomePrice">
-            Average Home Price ($200,000 - $2,000,000):
+            Average Home Price ($0 - $2,000,000):
           </label>
           <input
             type="range"
             id="avgHomePrice"
-            min="286667"
-            max="1567004"
+            min="0"
+            max="2000000"
             step="10000"
             value={avgHomePrice}
             onChange={(e) => setAvgHomePrice(parseInt(e.target.value))}
@@ -97,7 +108,7 @@ export default function Home() {
             type="range"
             id="population"
             min="0"
-            max="58404"
+            max="100000"
             step="1000"
             value={population}
             onChange={(e) => setPopulation(parseInt(e.target.value))}
@@ -107,12 +118,12 @@ export default function Home() {
         </div>
 
         <div className={styles.sliderContainer}>
-          <label htmlFor="unitsAvailable">Units Available (0 - 5,000):</label>
+          <label htmlFor="unitsAvailable">Units Available (0 - 10,000):</label>
           <input
             type="range"
             id="unitsAvailable"
             min="0"
-            max="10720"
+            max="10000"
             step="100"
             value={unitsAvailable}
             onChange={(e) => setUnitsAvailable(parseInt(e.target.value))}
@@ -120,6 +131,10 @@ export default function Home() {
           />
           <p>Units Available: {unitsAvailable.toLocaleString()}</p>
         </div>
+
+        <button onClick={resetSliders} className={styles.resetButton}>
+          Reset Sliders
+        </button>
 
         <TopZipCodes
           schoolRating={schoolRating}
