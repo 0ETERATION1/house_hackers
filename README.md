@@ -5,7 +5,7 @@
   </a>
 </p>
 
-<p align="center">A web application designed to help first-time homebuyers find the best neighborhoods based on personalized criteria.</p>
+<p align="center">A web application designed to help first-time homebuyers find the best neighborhoods in Fairfax based on personalized criteria.</p>
 
 <br/>
 
@@ -25,7 +25,7 @@ The Fannie Mae challenge inspired us to create an application for first-time hom
 
 ## Tech Stack
 
-- **Frontend**: React, Next.js, TypeScript, CSS3, HTML5
+- **Frontend**: React, Next.js, TypeScript, Tailwind CSS
 - **Backend**: Python, FastAPI
 - **Mapping**: Mapbox GL
 
