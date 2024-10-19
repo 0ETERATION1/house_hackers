@@ -1,33 +1,53 @@
 <p align="center">
-  <a href="https://nextjs-fastapi-starter.vercel.app/">
+  <a href="https://househackers.vercel.app/">
     <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" height="96">
-    <h3 align="center">Next.js FastAPI Starter</h3>
+    <h3 align="center">House Hackers</h3>
   </a>
 </p>
 
-<p align="center">Simple Next.j 14 boilerplate that uses <a href="https://fastapi.tiangolo.com/">FastAPI</a> as the API backend.</p>
+<p align="center">A web application designed to help first-time homebuyers find the best neighborhoods based on personalized criteria.</p>
 
 <br/>
 
 ## Introduction
 
-This is a hybrid Next.js 14 + Python template. One great use case of this is to write Next.js apps that use Python AI libraries on the backend, while still having the benefits of Next.js Route Handlers and Server Side Rendering.
+House Hackers is a web application designed to help first-time homebuyers find the best neighborhoods based on personalized criteria. Users can adjust sliders to filter ZIP codes by factors such as school ratings, number of hospitals, average home prices, population, and available housing units. The app dynamically ranks and displays the top five ZIP codes that match the selected preferences. An interactive Mapbox map visually highlights these top ZIP codes with color-coded indicators, providing both detailed rankings and geographical context to support informed home-buying decisions.
 
-## How It Works
+## Inspiration
 
-The Python/FastAPI server is mapped into to Next.js app under `/api/`.
+The Fannie Mae challenge inspired us to create an application for first-time homebuyers.
 
-This is implemented using [`next.config.js` rewrites](https://github.com/digitros/nextjs-fastapi/blob/main/next.config.js) to map any request to `/api/py/:path*` to the FastAPI API, which is hosted in the `/api` folder.
+## Features
 
-Also, the app/api routes are available on the same domain, so you can use NextJs Route Handlers and make requests to `/api/...`.
+- Personalized ZIP code rankings based on selected criteria
+- Interactive Mapbox map with color-coded ZIP codes
+- Filters including school ratings, hospital count, home prices, population, and available housing units
 
-On localhost, the rewrite will be made to the `127.0.0.1:8000` port, which is where the FastAPI server is running.
+## Tech Stack
 
-In production, the FastAPI server is hosted as [Python serverless functions](https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/python) on Vercel.
+- **Frontend**: React, Next.js, TypeScript, CSS3, HTML5
+- **Backend**: Python, FastAPI
+- **Mapping**: Mapbox GL
+
+## Challenges
+
+Finding extensive and reliable ZIP code-specific datasets to analyze was challenging. Additionally, formatting our data in an appealing way and fixing bugs took considerable effort.
+
+## Accomplishments
+
+We're proud of implementing a color-coded heat map according to ZIP code rankings, which provides a visually intuitive way to understand the data.
+
+## What We Learned
+
+Starting with a concrete idea before development always helps avoid confusion and accelerates the development process.
+
+## What's Next for House Hackers
+
+We hope to scale House Hackers for the entire country, incorporating more comprehensive datasets and adding additional filtering criteria to provide even more personalized results.
 
 ## Demo
 
-https://nextjs-fastapi-starter.vercel.app/
+Check out our application here: [househackers.vercel.app](https://househackers.vercel.app)
 
 ## Deploy Your Own
 
@@ -37,51 +57,7 @@ You can clone & deploy it to Vercel with one click:
 
 ## Developing Locally
 
-You can clone & create this repo with the following command
+You can clone this repo with the following command:
 
 ```bash
-npx create-next-app nextjs-fastapi --example "https://github.com/digitros/nextjs-fastapi"
-```
-
-## Getting Started
-
-First, create and activate a virtual environment:
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-Then, install the dependencies:
-
-```bash
-npm install
-# or
-yarn
-# or
-pnpm install
-```
-
-Then, run the development server(python dependencies will be installed automatically here):
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-The FastApi server will be running on [http://127.0.0.1:8000](http://127.0.0.1:8000) – feel free to change the port in `package.json` (you'll also need to update it in `next.config.js`).
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [FastAPI Documentation](https://fastapi.tiangolo.com/) - learn about FastAPI features and API.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+npx create-next-app househackers --example "https://github.com/digitros/nextjs-fastapi"
