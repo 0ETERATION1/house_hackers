@@ -48,16 +48,3 @@ We hope to scale House Hackers for the entire country, incorporating more compre
 ## Demo
 
 Check out our application here: [househackers.vercel.app](https://househackers.vercel.app)
-
-## Deploy Your Own
-
-You can clone & deploy it to Vercel with one click:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdigitros%2Fnextjs-fastapi%2Ftree%2Fmain)
-
-## Developing Locally
-
-You can clone this repo with the following command:
-
-```bash
-npx create-next-app househackers --example "https://github.com/digitros/nextjs-fastapi"
